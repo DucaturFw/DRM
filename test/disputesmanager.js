@@ -42,7 +42,12 @@ contract('DisputesManager', function(accounts) {
     }).catch(function(error) {
       const revertFound = error.message.search('revert') >= 0;
       assert.equal(revertFound, true,
-          `Expected "revert" on wrong dispute start time, got ${error} instead`);
+          `Expected "revert" on wrong dispute starter, got ${error} instead`);
+      return disputesManager.openDispute(caseObj.id, 4, { from: accounts[2] });
+    }).catch(function(error) {
+      const revertFound = error.message.search('revert') >= 0;
+      assert.equal(revertFound, true,
+          `Expected "revert" on wrong dispute stage (> stages count), got ${error} instead`);
       return disputesManager.openDispute(caseObj.id, 0, { from: accounts[2] });
     }).then(function(result) {
       assert.equal(result.logs[0].event, 'OpenDispute',

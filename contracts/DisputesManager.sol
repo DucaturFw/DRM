@@ -54,11 +54,13 @@ contract DisputesManager {
   }
 
   modifier canOpenDispute(uint id, uint stage) {
+    require(stage < caseStages[id].length);
     require(caseStages[id][stage].disputeStartAllowed < now);
     _;
   }
 
   modifier isStageDisputed(uint id, uint stage) {
+    require(stage < caseStages[id].length);
     require(caseStages[id][stage].disputed == 1);
     _;
   }
