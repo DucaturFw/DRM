@@ -1,11 +1,12 @@
 import Web3 from 'web3'
 
 import initListener from './listener'
-import api from './api'
+import DrmApi from './api'
 
 const abi = require('../../contract/build/contracts/DisputesManager.json');
-const address = '0x60903CDA8643805F9567a083C1734E139Fe7dAD2';
-const web3RPC = 'wss://rinkeby.infura.io/ws/OlWCtLVFGaNOXOgpelpw';
+const config = require('./config.json');
+const address = config.address;
+const web3RPC = config.web3rpc;
 
 const main = async () => {
   try {
@@ -13,7 +14,8 @@ const main = async () => {
     await web3.eth.net.isListening();
     const ctr = new web3.eth.Contract(abi, address);
 
-    await initListener(api, ctr);
+    const API = new DrmApi(config);
+    await initListener(API, ctr, config.fromBlock);
   } catch (err) {
     console.log({ err })
   }
