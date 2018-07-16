@@ -1,0 +1,8 @@
+{
+  "login": "abc@def.com",
+  "password": "12345678aa",
+  "endpoint": "http://127.0.0.1:8000/",
+  "address": "0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f",
+  "web3rpc": "ws://127.0.0.1:9545",
+  "fromBlock": 0
+}

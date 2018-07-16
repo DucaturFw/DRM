@@ -1,4 +1,4 @@
-import axios;
+import axios from 'axios';
 
 export type UserInfo = {
     eth_account: string;
