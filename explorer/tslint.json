@@ -1,0 +1,19 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "quotemark": [true, "single"],
+    "semicolon": [true, "never"],
+    "no-console": [false],
+    "curly": [true, "ignore-same-line"],
+    "arrow-parens": [false],
+    "no-var-requires": [false],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "lowercase-last",
+        "named-imports-order": "lowercase-first",
+        "grouped-imports": true
+      }
+    ]
+  }
+}

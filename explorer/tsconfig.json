@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "ramda": [
+        "node_modules/npm-ramda/index"
+      ]
+    },
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+  },
+  "exclude": [
+    "build",
+    "node_modules",
+    "*.test.ts"
+  ]
+}

@@ -1,0 +1,10 @@
+# Logs
+logs
+*.log
+
+# Dependency directory
+explorer/node_modules
+
+# Generated files
+explorer/build
+explorer/dist
