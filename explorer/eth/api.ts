@@ -42,6 +42,7 @@ export type Partial<T> = {
 
 export type NotifyEvent = {
     creation_date: string;
+    contract: number | CaseInfo;
     stage: number | StageInfo;
     user_by: number | User;
     user_to: number[] | User[];

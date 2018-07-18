@@ -17,44 +17,30 @@ function resolveEvent(api, event) {
     switch (event.event) {
         case "OpenDispute": {
             const stage = event.args.stage;
-            return api
-                .getCase(id)
-                .then((res: { data: CaseInfo }) => {
-                    const resEvent: Partial<NotifyEvent> = {
-                        stage: res.data.stages[stage].id,
-                        event_type: "disp_open",
-                        user_by: event.args.opener,
-                        user_to: res.data.party,
-                    };
-                    return api.createEvent(resEvent);
-                });
+            const resEvent: Partial<NotifyEvent> = {
+                contract: id,
+                stage: stage,
+                event_type: "disp_open",
+                user_by: event.args.opener
+            };
+            return api.createEvent(resEvent);
         }
         case "FinishDispute": {
             const stage = event.args.stage;
-            return api
-                .getCase(id)
-                .then((res: { data: CaseInfo }) => {
-                    const resEvent: Partial<NotifyEvent> = {
-                        stage: res.data.stages[stage].id,
-                        event_type: "disp_close",
-                        user_by: event.args.opener,
-                        user_to: res.data.party,
-                    };
-                    return api.createEvent(resEvent);
-                });
+            const resEvent: Partial<NotifyEvent> = {
+                contract: id,
+                stage: stage,
+                event_type: "disp_close"
+            };
+            return api.createEvent(resEvent);
         }
         case "FinishCase": {
-            return api
-                .getCase(id)
-                .then((res: { data: CaseInfo }) => {
-                    const resEvent: Partial<NotifyEvent> = {
-                        stage: res.data.stages[0].id,
-                        event_type: "fin",
-                        user_by: event.args.opener,
-                        user_to: res.data.party,
-                    };
-                    return api.createEvent(resEvent);
-                });
+            const resEvent: Partial<NotifyEvent> = {
+                contract: id,
+                event_type: "fin",
+                user_by: event.args.opener
+            };
+            return api.createEvent(resEvent);
         }
     }
 }
