@@ -1,5 +1,5 @@
-import { Contract } from 'web3/types'
-import DrmApi, { Partial, NotifyEvent, CaseInfo } from "./api";
+import {Contract, EventLog} from 'web3/types'
+import DrmApi, { Partial, NotifyEvent } from "./api";
 
 
 /* List of available events:
@@ -12,21 +12,26 @@ import DrmApi, { Partial, NotifyEvent, CaseInfo } from "./api";
  * event JudgeContractChanged(address from, address to);
  *
  */
-function resolveEvent(api, event) {
-    const id = event.args.id;
+function resolveEvent(api: DrmApi, event: EventLog) {
+    const id = event.returnValues.id;
+    console.log(id, event.event);
     switch (event.event) {
+        case "OpenCase": {
+            console.log(id, 'party: ', event.returnValues.party, 'stages: ', event.returnValues.stages);
+            return Promise.resolve(0);
+        }
         case "OpenDispute": {
-            const stage = event.args.stage;
+            const stage = event.returnValues.stage;
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
                 stage: stage,
                 event_type: "disp_open",
-                user_by: event.args.opener
+                address_by: event.returnValues.opener
             };
             return api.createEvent(resEvent);
         }
         case "FinishDispute": {
-            const stage = event.args.stage;
+            const stage = event.returnValues.stage;
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
                 stage: stage,
@@ -38,16 +43,29 @@ function resolveEvent(api, event) {
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
                 event_type: "fin",
-                user_by: event.args.opener
+                finished: true,
+                address_by: event.returnValues.opener
             };
             return api.createEvent(resEvent);
+        }
+        default: {
+            return Promise.resolve(0);
         }
     }
 }
 
 const main = async (api: DrmApi, ctr: Contract, fromBlock: number) => {
-    ctr.events.allEvents({fromBlock}, (error, event) =>
-        error ? console.log(error) : resolveEvent(api, event).catch(console.log))
+    ctr.events.allEvents({fromBlock}, async (error, event) => {
+        if (error) console.log(error, event);
+        else {
+            try {
+                const res = await resolveEvent(api, event);
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    })
 };
 
 export default main;

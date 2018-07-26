@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosPromise} from 'axios';
 
 export type UserInfo = {
     eth_account: string;
@@ -45,6 +45,9 @@ export type NotifyEvent = {
     contract: number | CaseInfo;
     stage: number | StageInfo;
     user_by: number | User;
+    address_by: number;
+    filehash: string;
+    finished: boolean;
     user_to: number[] | User[];
     seen: boolean;
     event_type: "fin"| "open" | "disp_close"  | "disp_open";
@@ -56,7 +59,7 @@ class DrmApi {
     public endpoint: string;
     private defaultHeaders = {};
 
-    constructor({login, password, endpoint}) {
+    constructor(login: string, password: string, endpoint: string) {
         this._login = login;
         this._password = password;
         this.endpoint = endpoint;
@@ -66,15 +69,15 @@ class DrmApi {
         }
     }
 
-    private _patch(endpoint, data, query = {}, headers = {}, params = {}) {
-        return axios.patch(`${this.endpoint}/${endpoint}`, {
+    private _patch(endpoint: string, data: any, query = {}, headers = {}, params = {}) {
+        return axios.patch(`${this.endpoint}/${endpoint}`, data,{
             params: query,
             headers: headers || this.defaultHeaders,
             ...params
           })
     }
 
-    private _post(endpoint, data, query = {}, headers = {}, params = {}) {
+    private _post(endpoint:string, data: any, query = {}, headers = {}, params = {}) {
         return axios.post(`${this.endpoint}/${endpoint}`, data, {
             params: query,
             headers: headers || this.defaultHeaders,
@@ -82,7 +85,7 @@ class DrmApi {
           })
     }
 
-    private _get(endpoint, query = {}, headers = {}, params = {}) {
+    private _get(endpoint: string, query = {}, headers = {}, params = {}) {
         return axios.get(`${this.endpoint}/${endpoint}`, {
             params: query,
             headers: headers || this.defaultHeaders,
@@ -90,37 +93,37 @@ class DrmApi {
           })
     }
 
-    getEvents(...args) { return this._get('events', ...args); }
-    getUsers(...args) { return this._get('users', ...args); }
-    getStages(...args) { return this._get('stages', ...args); }
-    getCases(...args) { return this._get('contracts', ...args); }
+    getEvents(...args: any[]) { return this._get('events', ...args); }
+    getUsers(...args: any[]) { return this._get('users', ...args); }
+    getStages(...args: any[]) { return this._get('stages', ...args); }
+    getCases(...args: any[]) { return this._get('contracts', ...args); }
 
-    update<T>(endpoint, id: number, data: Partial<T>, ...args) {
+    update<T>(endpoint: string, id: number, data: Partial<T>, ...args: any[]) {
         return this._patch(`${endpoint}/${id}/`, data, ...args);
     }
-    updateCase = (id, data, ...args) => this.update<CaseInfo>('contracts', id, data, ...args);
-    updateUser = (id, data, ...args) => this.update<User>('users', id, data, ...args);
-    updateUserInfo = (id, data, ...args) => this.update<UserInfo>('userinfo', id, data, ...args);
-    updateStage = (id, data, ...args) => this.update<StageInfo>('stages', id, data, ...args);
-    updateEvent = (id, data, ...args) => this.update<NotifyEvent>('events', id, data, ...args);
+    updateCase = (id: number, data: Partial<CaseInfo>, ...args: any[]) => this.update<CaseInfo>('contracts', id, data, ...args);
+    updateUser = (id: number, data: Partial<User>, ...args: any[]) => this.update<User>('users', id, data, ...args);
+    updateUserInfo = (id: number, data: Partial<UserInfo>, ...args: any[]) => this.update<UserInfo>('userinfo', id, data, ...args);
+    updateStage = (id: number, data: Partial<StageInfo>, ...args: any[]) => this.update<StageInfo>('stages', id, data, ...args);
+    updateEvent = (id: number, data: Partial<NotifyEvent>, ...args: any[]) => this.update<NotifyEvent>('events', id, data, ...args);
 
-    create<T>(endpoint, data: Partial<T>, ...args) {
+    create<T>(endpoint: string, data: Partial<T>, ...args: any[]) {
         return this._post(`${endpoint}`, data, ...args);
     }
-    createCase = (data, ...args) => this.create<CaseInfo>('contracts', data, ...args);
-    createUser = (data, ...args) => this.create<User>('users', data, ...args);
-    createUserInfo = (data, ...args) => this.create<UserInfo>('userinfo', data, ...args);
-    createStage = (data, ...args) => this.create<StageInfo>('stages', data, ...args);
-    createEvent = (data, ...args) => this.create<NotifyEvent>('events', data, ...args);
+    createCase = (data: Partial<CaseInfo>, ...args: any[]) => this.create<CaseInfo>('contracts', data, ...args);
+    createUser = (data: Partial<User>, ...args: any[]) => this.create<User>('users', data, ...args);
+    createUserInfo = (data: Partial<UserInfo>, ...args: any[]) => this.create<UserInfo>('userinfo', data, ...args);
+    createStage = (data: Partial<StageInfo>, ...args: any[]) => this.create<StageInfo>('stages', data, ...args);
+    createEvent = (data: Partial<NotifyEvent>, ...args: any[]) => this.create<NotifyEvent>('events', data, ...args);
 
-    get<T>(endpoint, id: number, ...args) {
+    get<T>(endpoint: string, id: number, ...args: any[]): AxiosPromise<T> {
         return this._get(`${endpoint}/${id}`, ...args);
     }
-    getCase = (id, data, ...args) => this.get<CaseInfo>('contracts', id, ...args);
-    getUser = (id, data, ...args) => this.get<User>('users', id, ...args);
-    getUserInfo = (id, data, ...args) => this.get<UserInfo>('userinfo', id, ...args);
-    getStage = (id, data, ...args) => this.get<StageInfo>('stages', id, ...args);
-    getEvent = (id, data, ...args) => this.get<NotifyEvent>('events', id, ...args);
+    getCase = (id: number, ...args: any[]) => this.get<CaseInfo>('contracts', id, ...args);
+    getUser = (id: number, ...args: any[]) => this.get<User>('users', id, ...args);
+    getUserInfo = (id: number, ...args: any[]) => this.get<UserInfo>('userinfo', id, ...args);
+    getStage = (id: number, ...args: any[]) => this.get<StageInfo>('stages', id, ...args);
+    getEvent = (id: number, ...args: any[]) => this.get<NotifyEvent>('events', id, ...args);
 }
 
 export default DrmApi;
