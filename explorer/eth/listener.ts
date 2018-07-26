@@ -24,7 +24,7 @@ function resolveEvent(api: DrmApi, event: EventLog) {
             const stage = event.returnValues.stage;
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
-                stage: stage,
+                stage_num: stage,
                 event_type: "disp_open",
                 address_by: event.returnValues.opener
             };
@@ -62,7 +62,7 @@ const main = async (api: DrmApi, ctr: Contract, fromBlock: number) => {
                 const res = await resolveEvent(api, event);
                 console.log(res);
             } catch (err) {
-                console.error(err);
+                console.error(err.response.data);
             }
         }
     })

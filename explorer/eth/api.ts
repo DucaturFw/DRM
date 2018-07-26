@@ -34,6 +34,7 @@ export type CaseInfo = {
     files: string;
     finished: 0 | 1 | 2;
     stages: StageInfo[];
+    stage_num: number;
 }
 
 export type Partial<T> = {
@@ -44,6 +45,7 @@ export type NotifyEvent = {
     creation_date: string;
     contract: number | CaseInfo;
     stage: number | StageInfo;
+    stage_num: number | StageInfo;
     user_by: number | User;
     address_by: number;
     filehash: string;
@@ -64,29 +66,29 @@ class DrmApi {
         this._password = password;
         this.endpoint = endpoint;
         this.defaultHeaders = {
-            'Content-Type': 'applications/json',
-            'Authorization': Buffer.from(`${this._login}:${this._password}`).toString('base64'),
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + Buffer.from(`${this._login}:${this._password}`).toString('base64'),
         }
     }
 
-    private _patch(endpoint: string, data: any, query = {}, headers = {}, params = {}) {
-        return axios.patch(`${this.endpoint}/${endpoint}`, data,{
+    private _patch(endpoint: string, data: any, query = {}, headers = null, params = {}) {
+        return axios.patch(`${this.endpoint}/${endpoint}/`, data,{
             params: query,
             headers: headers || this.defaultHeaders,
             ...params
           })
     }
 
-    private _post(endpoint:string, data: any, query = {}, headers = {}, params = {}) {
-        return axios.post(`${this.endpoint}/${endpoint}`, data, {
+    private _post(endpoint:string, data: any, query = {}, headers = null, params = {}) {
+        return axios.post(`${this.endpoint}/${endpoint}/`, data, {
             params: query,
             headers: headers || this.defaultHeaders,
             ...params
           })
     }
 
-    private _get(endpoint: string, query = {}, headers = {}, params = {}) {
-        return axios.get(`${this.endpoint}/${endpoint}`, {
+    private _get(endpoint: string, query = {}, headers = null, params = {}) {
+        return axios.get(`${this.endpoint}/${endpoint}/`, {
             params: query,
             headers: headers || this.defaultHeaders,
             ...params
@@ -117,7 +119,7 @@ class DrmApi {
     createEvent = (data: Partial<NotifyEvent>, ...args: any[]) => this.create<NotifyEvent>('events', data, ...args);
 
     get<T>(endpoint: string, id: number, ...args: any[]): AxiosPromise<T> {
-        return this._get(`${endpoint}/${id}`, ...args);
+        return this._get(`${endpoint}/${id}/`, ...args);
     }
     getCase = (id: number, ...args: any[]) => this.get<CaseInfo>('contracts', id, ...args);
     getUser = (id: number, ...args: any[]) => this.get<User>('users', id, ...args);
