@@ -18,7 +18,12 @@ function resolveEvent(api: DrmApi, event: EventLog) {
     switch (event.event) {
         case "OpenCase": {
             console.log(id, 'party: ', event.returnValues.party, 'stages: ', event.returnValues.stages);
-            return Promise.resolve(0);
+            const resEvent: Partial<NotifyEvent> = {
+                contract: id,
+                event_type: "open",
+                address_by: event.returnValues.opener
+            };
+            return api.createEvent(resEvent);
         }
         case "OpenDispute": {
             const stage = event.returnValues.stage;

@@ -24,7 +24,8 @@
     "test": "jest",
     "eth": "yarn ts-node ./eth",
     "logs": "tail -fn50 log_*",
-    "eth:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./eth"
+    "eth:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./eth",
+    "postinstall": "rm -f node_modules/web3/index.d.ts"
   },
   "devDependencies": {
     "@types/jest": "^23.1.5",
