@@ -20,6 +20,7 @@ function resolveEvent(api: DrmApi, event: EventLog) {
             console.log(id, 'party: ', event.returnValues.party, 'stages: ', event.returnValues.stages);
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
+                stage_num: 0,
                 event_type: "open",
                 address_by: event.returnValues.opener
             };
@@ -39,7 +40,7 @@ function resolveEvent(api: DrmApi, event: EventLog) {
             const stage = event.returnValues.stage;
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
-                stage: stage,
+                stage_num: stage,
                 event_type: "disp_close"
             };
             return api.createEvent(resEvent);
@@ -48,6 +49,7 @@ function resolveEvent(api: DrmApi, event: EventLog) {
             const resEvent: Partial<NotifyEvent> = {
                 contract: id,
                 event_type: "fin",
+                stage_num: 0,
                 finished: true,
                 address_by: event.returnValues.opener
             };
