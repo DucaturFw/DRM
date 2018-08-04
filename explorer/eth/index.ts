@@ -15,7 +15,7 @@ const main = async () => {
     const ctr = new web3.eth.Contract(abi, address);
 
     const API = new DrmApi(config.login, config.password, config.endpoint);
-    await initListener(API, ctr, config.fromBlock);
+    await initListener(API, ctr, config.writeBlockTo);
   } catch (err) {
     console.log({ err })
   }

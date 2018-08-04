@@ -1,6 +1,8 @@
 import {Contract, EventLog} from 'web3/types'
 import DrmApi, { Partial, NotifyEvent } from "./api";
 
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
 
 /* List of available events:
  *
@@ -61,12 +63,27 @@ function resolveEvent(api: DrmApi, event: EventLog) {
     }
 }
 
-const main = async (api: DrmApi, ctr: Contract, fromBlock: number) => {
-    ctr.events.allEvents({fromBlock}, async (error, event) => {
+const updateBlock = async (fileName: string, blockNum: number) => {
+  return fs.writeFileAsync(fileName, blockNum, 'utf8');
+};
+
+const readBlock = async (fileName: string) : Promise<number> => {
+    try {
+        return Promise.resolve(parseInt(await fs.readFileAsync(fileName, 'utf8'), 10));
+    } catch (err) {
+        console.error('Error reading file', err);
+        return Promise.resolve(0);
+    }
+};
+
+const main = async (api: DrmApi, ctr: Contract, fileName: string) => {
+
+    ctr.events.allEvents({ fromBlock: await readBlock(fileName) }, async (error, event) => {
         if (error) console.log(error, event);
         else {
             try {
                 const res = await resolveEvent(api, event);
+                await updateBlock(fileName, event.blockNumber);
                 console.log(res);
             } catch (err) {
                 console.error(err.response.data);

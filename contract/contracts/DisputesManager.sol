@@ -109,7 +109,8 @@ contract DisputesManager {
     return i;
   }
 
-  function openDispute(uint id, uint stage) public onlyParty(id)
+  function openDispute(uint id, uint stage) public
+                                            onlyParty(id)
                                             caseNotFinished(id)
                                             isNotDisputed(id)
                                             canOpenDispute(id, stage) {

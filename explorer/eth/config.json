@@ -1,8 +1,8 @@
 {
-  "login": "duc@duc.duc",
-  "password": "12345678a",
+  "login": "admin@drm.duc",
+  "password": "123456aa",
   "endpoint": "http://18.191.139.227/api",
   "address": "0x627e5649c7d3fdb24768b494a65a781ced83dcac",
   "web3rpc": "wss://rinkeby.infura.io/ws",
-  "fromBlock": 0
+  "writeBlockTo": "__blocknum"
 }
